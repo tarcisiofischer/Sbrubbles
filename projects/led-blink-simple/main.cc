@@ -1,19 +1,20 @@
-typedef unsigned char uint8;
+#include <cpu.h>
+
+const long int COUNTDOWN = 0xffff;
 
 int main()
 {
-    asm volatile ("cli");
-    uint8 *ddrb = (unsigned char*)0x24;
-    uint8 *portb = (unsigned char*)0x25;
+    auto &cpu = ATMega1280::cpu();
+    cpu.cli();
 
-    *ddrb = 0xff;
-    *portb = 0xff;
+    cpu.port_b.ddr = 0xff;
+    cpu.port_b.port = 0xff;
 
-    long int i = 0xffff;
+    long int i = COUNTDOWN;
     while (1) {
         while (--i);
-        *portb = ~*portb;
-        i = 0xffff;
+        cpu.port_b.port = ~cpu.port_b.port;
+        i = COUNTDOWN;
     }
 
     return 0;

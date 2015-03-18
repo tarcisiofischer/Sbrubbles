@@ -1,5 +1,5 @@
 all:
-	avr-g++ -mmcu=atmega1280 -std=c++11 -nostdlib -Wall -pedantic main.cc -o a.out
+	avr-g++ -mmcu=atmega1280 -std=c++11 -nostdlib -Wall -pedantic -O0 main.cc -o a.out -I../../src/
 	avr-objcopy -j .text -j .data -O ihex a.out a.hex
 
 install:
