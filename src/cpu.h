@@ -208,21 +208,33 @@ public:
     Register UBRR3L;
     Register UBRR3H;
     Register UDR3;
+    Register _reserved36[201];
 
-    __inline__ void cli() const
+    static void cli() __attribute__((always_inline))
     {
         asm volatile("cli\n");
     }
 
-    __inline__ void sei() const
+    static void sei() __attribute__((always_inline))
     {
         asm volatile("sei\n");
     }
 
-    static __inline__ ATMega1280 &cpu()
+    static void reti() __attribute__((always_inline))
+    {
+        asm volatile("reti\n");
+    }
+
+    static void halt() __attribute__((always_inline))
+    {
+      ATMega1280::cli();
+      while(1);
+    }
+
+    static ATMega1280 &cpu() __attribute__((always_inline))
     {
         return *reinterpret_cast<ATMega1280*>((char*)0x20);
-    } 
+    }
 };
 
 #endif

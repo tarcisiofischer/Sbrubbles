@@ -1,9 +1,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define inline __attribute__((always_inline))  __inline__
+#define force_inline __attribute__((always_inline))
 
-typedef unsigned char Register;
+typedef volatile unsigned char Register;
 
 struct Port {
     Register pin;
