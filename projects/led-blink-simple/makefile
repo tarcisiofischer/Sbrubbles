@@ -5,3 +5,6 @@ all:
 install:
 	avrdude -c arduino -v -p atmega1280 -P /dev/ttyUSB0 -e -b 57600 -U flash:w:a.hex
 
+clean:
+	rm a.out
+	rm a.hex
