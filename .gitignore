@@ -1,3 +1,6 @@
 tools/build/
 *.hex
 *.out
+.cproject
+.project
+.settings
