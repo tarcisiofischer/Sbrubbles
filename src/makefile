@@ -18,10 +18,22 @@ led_blink: led_blink.o core/interrupt_vector_table.o dependencies
 		-O ihex $@.out \
 		$@.hex
 
-led_blink.o: led_blink.cc
+led_blink_simple: led_blink_simple.o core/interrupt_vector_table.o dependencies
+	avr-ld \
+		-m$(MCU_TYPE) \
+		core/interrupt_vector_table.o \
+		$< \
+		-o $@.out
+	avr-objcopy \
+		-j .text \
+		-j .data \
+		-O ihex $@.out \
+		$@.hex
+
+%.o: %.cc
 	 $(CC) $(CFLAGS) -o $@ $<
 
-install: led_blink
+install: $(TARGET)
 	avrdude \
 	-v \
 	-e \
@@ -29,7 +41,7 @@ install: led_blink
 	-p atmega1280 \
 	-P /dev/ttyUSB0 \
 	-b 57600 \
-	-U flash:w:$<.hex
+	-U flash:w:$(TARGET).hex
 
 clean:
 	rm a.out

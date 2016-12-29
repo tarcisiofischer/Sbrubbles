@@ -1,6 +1,4 @@
-#include <cpu.h>
-
-const long int COUNTDOWN = 0xffff;
+#include <core/cpu.h>
 
 int main()
 {
@@ -10,11 +8,9 @@ int main()
   cpu.port_b.ddr = 0xff;
   cpu.port_b.port = 0xff;
 
-  long int i = COUNTDOWN;
   while (1) {
-    while (--i);
+    int j = 1000; while (--j) { int i = 1000; while (--i); };
     cpu.port_b.port = ~cpu.port_b.port;
-    i = COUNTDOWN;
   }
 
   return 0;
