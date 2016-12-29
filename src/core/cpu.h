@@ -1,7 +1,7 @@
 #ifndef CPU_H
 #define CPU_H
 
-#include <common.h>
+#include "../core/common.h"
 
 class ATMega1280
 {
