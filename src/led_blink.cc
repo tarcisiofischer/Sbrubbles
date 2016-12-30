@@ -1,25 +1,40 @@
 #include <core/cpu.h>
 
+void configure_timer()
+{
+  ATMega1280::cli();
+
+  auto &cpu = ATMega1280::cpu();
+
+  cpu.TIMSK1 = 0x02; // Timer1 CompareA match interrupt enable
+
+  cpu.TCCR1A = 0x00;
+  cpu.TCCR1B = 0x00;
+
+  // Configure WGM1 to set CTC_OCR1A mode (0 1 0 0)
+  cpu.TCCR1A |= 0x00;
+  cpu.TCCR1B |= 0x08;
+
+  // Select clock = clkIO / 256
+  // clkIO == 16Mhz
+  // clock = 62.5khz
+  cpu.TCCR1A |= 0x00;
+  cpu.TCCR1B |= 0x04;
+
+  const unsigned int time = 0.1 * 62500; // 100 ms
+  cpu.OCR1AH = (time & 0xff00) >> 8;
+  cpu.OCR1AL = (time & 0x00ff) >> 0;
+
+  ATMega1280::sei();
+}
+
 int main()
 {
   auto &cpu = ATMega1280::cpu();
 
   cpu.port_b.ddr = 0xff;
   cpu.port_b.port = 0x00;
-  ATMega1280::cli();
+  configure_timer();
 
-  // Interrupt Mask Register for timer 1. Datasheet pg. 161
-  // Bit 1 = TOIE[n]: Timer/Counter[n], Overflow Interrupt Enable
-  // The corresponding Interrupt Vector (see “Interrupts” on page 101) is
-  // executed when the TOV[n] Flag, located in TIFR[n], is set.
-  // In this case, TIMER1 OVF = addr(0x0028)
-  cpu.TIMSK1 = 0x01;
-  cpu.TCNT1L = 0x00;
-  cpu.TCNT1H = 0xF0;
-  cpu.TIFR1 = 0x00;
-  cpu.TCCR1A = 0x00;
-  cpu.TCCR1B = 0x04;
-
-  ATMega1280::sei();
   while(1);
 }
