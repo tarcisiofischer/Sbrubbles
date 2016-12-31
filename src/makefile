@@ -1,7 +1,7 @@
 CC=avr-g++
 TARGET_MCU=atmega1280
 MCU_TYPE=avr51
-CFLAGS=-c -mmcu=$(TARGET_MCU) -std=c++11 -Wall -pedantic -nostdlib -nostartfiles -O2 -I.
+CFLAGS=-c -mmcu=$(TARGET_MCU) -std=c++11 -nostdlib -nostartfiles -O2 -I.
 
 dependencies:
 	$(MAKE) -C core

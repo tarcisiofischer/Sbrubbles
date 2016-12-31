@@ -28,12 +28,27 @@ void configure_timer()
   ATMega1280::sei();
 }
 
+void my_int()
+{
+  auto &cpu = ATMega1280::cpu();
+  cpu.port_b.port = ~cpu.port_b.port;
+}
+
+void install_interrupt()
+{
+  typedef void (myfunc)();
+  myfunc** f_ = (myfunc**)(ATMega1280::memory_begin());
+  *f_ = &my_int;
+}
+
 int main()
 {
   auto &cpu = ATMega1280::cpu();
 
   cpu.port_b.ddr = 0xff;
   cpu.port_b.port = 0x00;
+
+  install_interrupt();
   configure_timer();
 
   while(1);

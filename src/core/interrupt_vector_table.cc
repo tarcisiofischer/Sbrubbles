@@ -17,7 +17,7 @@ asm volatile (
     "jmp bad_interrupt\r\n"       // 15  0x001C  TIMER2 COMPB
     "jmp bad_interrupt\r\n"       // 16  0x001E  TIMER2 OVF
     "jmp bad_interrupt\r\n"       // 17  0x0020  TIMER1 CAPT
-    "jmp timer\r\n"       // 18  0x0022  TIMER1 COMPA
+    "jmp timer\r\n"               // 18  0x0022  TIMER1 COMPA
     "jmp bad_interrupt\r\n"       // 19  0x0024  TIMER1 COMPB
     "jmp bad_interrupt\r\n"       // 20  0x0026  TIMER1 COMPC
     "jmp bad_interrupt\r\n"       // 21  0x0028  TIMER1 OVF
@@ -61,11 +61,12 @@ asm volatile (
 
 #include <core/cpu.h>
 
-extern "C" void timer() __attribute__ ((signal));
+extern "C" void timer() __attribute__ ((naked));
 void timer()
 {
-  auto &cpu = ATMega1280::cpu();
-  cpu.port_b.port = ~cpu.port_b.port;
+  typedef void (f)();
+  (*(f**)(ATMega1280::memory_begin()))();
+  asm volatile("reti");
 }
 
 extern "C" void bad_interrupt() __attribute__ ((naked));

@@ -6,8 +6,6 @@
 class ATMega1280
 {
 public:
-    static const unsigned int number_of_interrupts = 18;
-
     Port port_a;
     Port port_b;
     Port port_c;
@@ -227,13 +225,18 @@ public:
 
     static void halt() __attribute__((always_inline))
     {
-      ATMega1280::cli();
-      while(1);
+        ATMega1280::cli();
+        while(1);
     }
 
     static ATMega1280 &cpu() __attribute__((always_inline))
     {
         return *reinterpret_cast<ATMega1280*>((char*)0x20);
+    }
+
+    static char* memory_begin() __attribute__((always_inline))
+    {
+        return (char*)0x200;
     }
 };
 
